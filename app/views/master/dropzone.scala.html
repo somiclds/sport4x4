@@ -1,0 +1,155 @@
+@(title: String)
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@title</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("dropzone-master/dist/basic.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("dropzone-master/dist/dropzone.css")">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/file_upload.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lightbox/css/lightbox.css")">
+    </head>
+    <body>
+        <form id="my-awesome-dropzone"  action="@controllers.master.routes.Mastercms.uploadFile" class="dropzone">
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+            </div>
+        </form>
+    </body>
+    <script src="@routes.Assets.at("dropzone-master/dist/dropzone.js")"></script>
+    <script src="@routes.Assets.at("ckeditor/ckeditor.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("lightbox/js/lightbox.js")"></script>
+    <script>
+        $(document).ready(function(){
+
+            $(document).on('click','.select-button',function(e){
+                console.log(e.target);
+                var href = $(e.target).siblings(".file-url").attr("href");
+                window.opener.CKEDITOR.tools.callFunction(window.opener.CKEDITOR.currentInstance._.filebrowserFn, href);
+                window.close();
+            });
+
+            var formatFilename = function (name) {
+                var ext = name.substring(name.lastIndexOf('.'))
+                return name.substring(0, name.lastIndexOf('.')) + "_" + Math.floor((Math.random() * 10000) + 1) + ext;
+            };
+
+            var fileList = new Array;
+            var i = 0;
+            Dropzone.options.myAwesomeDropzone = {
+                url: "@controllers.master.routes.Mastercms.uploadFile",
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 2, // MB
+                dictDefaultMessage: "Įkelti failą",
+                dictInvalidFileType: "Netinkamas failo tipas",
+                dictFileTooBig: "Per didelis failas {{filesize}}MB. Maksimalus leistinas yra {{maxFilesize}}MB",
+                dictCancelUpload: "Nutraukti įkėlimą",
+                dictCancelUploadConfirmation: "Ar tikrai norite nutraukti įkėlimą?",
+                dictRemoveFile: "Pašalinti failą",
+                dictRemoveFileConfirmation: "Ar tikrai norite ištrinti faila?",
+                addRemoveLinks: true,
+                renameFilename: formatFilename,
+                error: function(file, response) {
+                    if($.type(response) === "string")
+                        var message = response; //dropzone sends it's own error messages in string
+                    else
+                        var message = response.message;
+                    file.previewElement.classList.add("dz-error");
+                    _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = message);
+                    }
+                    return _results;
+                },
+                init: function() {
+                    thisDropzone = this;
+
+                    $.get('@controllers.master.routes.Mastercms.getFiles', function(data) {
+
+                        $.each(data, function(key,value){
+
+                            console.log(value.fileType);
+
+                            var mockFile = { name: value.name, size: value.size };
+
+                            thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+                            thisDropzone.options.thumbnail.call(thisDropzone, mockFile, value.path);
+                            thisDropzone.emit("complete", mockFile);
+                            thisDropzone.emit("remove", mockFile);
+
+                            fileList[i] = {"serverFileName" : value.path, "fileName" : value.name,"fileId" : i };
+                            i++;
+
+                        });
+                        // Wrap files with links
+                        $(".dz-image img").each(function () {
+                            console.log($(this).attr("src"));
+                            var src = $(this).attr("src");
+                            var ext = src.substring(src.lastIndexOf('.'));
+                            if(ext == ".pdf") {
+                                $(this).closest(".dz-image").siblings(".dz-details").wrap("<a class='" + "file-url" +"' href='" + src + "' target='"+"_blank"+"'/>");
+                                this.src = "@routes.Assets.at("images/pdf-logo.png")";
+                            }
+                            else if(ext == ".doc" || ext == ".docx") {
+                                $(this).closest(".dz-image").siblings(".dz-details").wrap("<a class='" + "file-url" +"' href='" + src + "' target='"+"_blank"+"'/>")
+                                this.src = "@routes.Assets.at("images/word-logo.png")"
+                            }
+                            else{
+                                $(this).closest(".dz-image").siblings(".dz-details").wrap("<a class='" + "file-url" +"' href='" + src + "' data-lightbox='" + "dropzone" +"'/>");
+                            }
+                            $(this).closest(".dz-preview").prepend("<button class='select-button' type='button'>Pasirinkti</button>");
+                        });
+                    });
+
+                    this.on("success", function(file, serverFileName) {
+                        console.log(file);
+                        console.log(serverFileName);
+                        var img = $(file.previewElement).children(".dz-image").children("img");
+                        var ext = serverFileName.substring(serverFileName.lastIndexOf('.'));
+                        if(ext == ".pdf") {
+                            $(file.previewElement).children(".dz-details").wrap("<a class='" + "file-url" +"' href='" + serverFileName + "' target='"+"_blank"+"'/>");
+                            img.attr("src", "@routes.Assets.at("images/pdf-logo.png")");
+                        }
+                        else if(ext == ".doc" || ext == ".docx") {
+                            $(file.previewElement).children(".dz-details").wrap("<a class='" + "file-url" +"' href='" + serverFileName + "' target='"+"_blank"+"'/>")
+                            img.attr("src", "@routes.Assets.at("images/word-logo.png")");
+                        }
+                        else{
+                            $(file.previewElement).children(".dz-details").wrap("<a class='" + "file-url" +"' href='" + serverFileName + "' data-lightbox='" + "dropzone" +"'/>");
+                        }
+                        $(file.previewElement).prepend("<button class='select-button' type='button'>Pasirinkti</button>");
+
+                        fileList[i] = {"serverFileName" : serverFileName, "fileName" : file.name,"fileId" : i };
+                        i++;
+                    });
+
+                    this.on("removedfile", function(file) {
+                        var rmvFile = "";
+                        for(f=0;f<fileList.length;f++){
+
+                            if(fileList[f].fileName == file.name)
+                            {
+                                rmvFile = fileList[f].serverFileName;
+                            }
+
+                        }
+
+                        if (rmvFile){
+                            $.ajax({
+                                type: 'POST',
+                                url: '@controllers.master.routes.Mastercms.deleteFile',
+                                data: { "fileUrl" : rmvFile },
+                            });
+                        }
+                    });
+                }
+            };
+        });
+    </script>
+</html>

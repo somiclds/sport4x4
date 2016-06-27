@@ -1,0 +1,85 @@
+@(title: String)(typ: Int, category: Int, page: Int, postsPerPage: Int)
+
+@import org.joda.time.format.DateTimeFormat
+
+@typeString(t: Int) = @{
+    t match {
+        case 0 => ""
+        case 1 => "rallyraid"
+        case 2 => "trophyraid"
+        case _ => ""
+    }
+}
+
+@categoryString(cat: Int) = @{
+    cat match {
+        case 1 => "naujienos"
+        case 2 => "dokumentai"
+        case 3 => "asmenybes"
+        case 4 => "remejai"
+        case 5 => "istorija"
+        case _ => ""
+    }
+}
+
+@pagesCount = @{Post.pagesCount(typ, category, postsPerPage)}
+
+@mainTemplate(title, typ) {
+    <div id="content" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @if(typ == 0){
+                    @for(post <- Post.findNews(page, postsPerPage)){
+                        <div class="post-block" postid="@post.id">
+                            <div class="post-header">
+                                <a href="@controllers.main.routes.Application.showPost(post.id)">
+                                    <h2 class="post-title">@post.title</h2>
+                                </a>
+                                <br>
+                                @DateTimeFormat.forPattern("yyyy-MM-dd").print(post.created)
+                            </div>
+                            <div class="post-body">
+                            @Html(post.body)
+                            </div>
+                            <div class="post-footer">
+                                <div class="fb-like" data-href="@controllers.main.routes.Application.showPost(post.id)" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                @if(typ != 0) {
+                    @for(post <- Post.findPosts(typ, category, page, postsPerPage)){
+                        <div class="post-block" postid="@post.id">
+                            <div class="post-header">
+                                <a href="@controllers.main.routes.Application.showPost(post.id)">
+                                    <h2 class="post-title">@post.title</h2>
+                                </a>
+                                <br>
+                                @DateTimeFormat.forPattern("yyyy-MM-dd").print(post.created)
+                            </div>
+                            <div class="post-body">
+                            @Html(post.body)
+                            </div>
+                            <div class="post-footer">
+                                <div class="fb-like" data-href="@controllers.main.routes.Application.showPost(post.id)" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                @if(pagesCount > 1) {
+                    <div class="text-center">
+                            <ul class="pagination pagination-centered">
+                            @for(i <- 1 to Post.pagesCount(typ, category, postsPerPage)) {
+                                @if(i==page) {
+                                    <li class="active"><a href="@controllers.main.routes.Application.index(typeString(typ), categoryString(category), i)">@i</a></li>
+                                } else {
+                                    <li><a href="@controllers.main.routes.Application.index(typeString(typ), categoryString(category), i)">@i</a></li>
+                                }
+                            }
+                            </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

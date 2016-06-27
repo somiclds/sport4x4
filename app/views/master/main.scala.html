@@ -1,0 +1,301 @@
+@(title: String, typ: Int, category: Int, page: Int, postsPerPage: Int, form: Form[Option[models.Post]])(implicit template: String => Html => Html)
+
+@import org.joda.time.format.DateTimeFormat
+
+@typeString(t: Int) = @{
+    t match {
+        case 0 => ""
+        case 1 => "rallyraid"
+        case 2 => "trophyraid"
+        case _ => ""
+    }
+}
+
+@categoryString(cat: Int) = @{
+    cat match {
+        case 1 => "naujienos"
+        case 2 => "dokumentai"
+        case 3 => "asmenybes"
+        case 4 => "remejai"
+        case 5 => "istorija"
+        case _ => ""
+    }
+}
+
+@pagesCount = @{Post.pagesCount(typ, category, postsPerPage)}
+
+@action  = @{
+    if(typ==0) {
+        "/master/createPost/"+categoryString(category)+"/"+page
+    } else{
+        controllers.master.routes.Mastercms.createPost(typeString(typ), categoryString(category), page)
+    }
+}
+
+@template(title) {
+
+    <div class="container-fluid">
+        <div id="header" class="row">
+            <div id="left-flag" class="col-sm-2 col-sm-offset-1 text-right">
+                <a href="https://www.lesta.lt/" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/lesta_flag.png")"></a><br>
+                <a href="http://www.autopaslauga.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/autopaslauga_flag.png")"></a>
+            </div>
+            <div id="picture-container" class="col-sm-6 nopadding">
+                <a href="http://www.facebook.com/4x4propaganda" target="_blank"><img id="picture-fb" src="@routes.Assets.at("images/fb_logo.png")"></a>
+                <img id="picture-main"
+                    @if(typ==0){src="@routes.Assets.at("images/picture_main.png")"}
+                    @if(typ==1){src="@routes.Assets.at("images/picture_main_rallyraid.png")"}
+                    @if(typ==2){src="@routes.Assets.at("images/picture_main_trophyraid.png")"}
+                >
+            </div>
+            <div id="right-flag" class="col-sm-2">
+                <a href="http://www.certex.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/certex_flag.png")"><br></a>
+                <a href="http://www.kervi.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/kervi_flag.png")"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nav-container" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 nopadding">
+                <ul id="navbar-main" class="nav nav-justified nav-custom">
+                    <li role="presentation" class="dropdown @if(typ==2){ active }">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Pravažumo sportas <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href='@controllers.master.routes.Mastercms.main("trophyraid", "dokumentai", 1)'>Dokumentai</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("trophyraid", "asmenybes", 1)">Asmenybės</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("trophyraid", "remejai", 1)">Remėjai</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("trophyraid", "istorija", 1)">Istorija</a></li>
+                        </ul>
+                    </li>
+                    <li class="@if(typ==0){ active }"><a href="@controllers.master.routes.Mastercms.main("", "naujienos", 1)">Naujienos</a></li>
+                    <li role="presentation" class="dropdown @if(typ==1){ active }">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Bekelės lenktynės <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@controllers.master.routes.Mastercms.main("rallyraid", "dokumentai", 1)">Dokumentai</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("rallyraid", "asmenybes", 1)">Asmenybės</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("rallyraid", "remejai", 1)">Remėjai</a></li>
+                            <li><a href="@controllers.master.routes.Mastercms.main("rallyraid", "istorija", 1)">Istorija</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="content-container" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 nopadding">
+                <div id="create-post-container" class="container-fluid">
+                    <button id="toggle-form" class="btn btn-default">Kurti įrašą</button>
+                    <div id="create-post-row" class="row" @if(!form.hasErrors){style="display: none"}>
+                        <div class="col-sm-12">
+                            <form id="create-post-form" action="@action" method="POST" accept-charset="UTF-8">
+                                @if(form.hasErrors) {
+                                    @form.errors.map { error =>
+                                        <p class="text-danger">@error.message</p>
+                                    }
+                                }
+                                <div class="form-group">
+                                    <label for="title">Antraštė:</label>
+                                    <input type="text" name="title" class="form-control" id="title" placeholder="Įveskite antraštę" value="@form("title").value">
+                                </div>
+                                <div class="form-group">
+                                    <label for="body">Turinys:</label>
+                                    <textarea id="body-textarea" class="form-control" rows="10" name="body" placeholder="Įveskite įrašo turinį">@form("body").value</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="usr">Kategorija:</label>
+                                    <select name="postCategory" class="form-control" id="postCategory" value="@form("postCategory").value">
+                                        @if(category==1){<option value=1>Naujienos</option>}
+                                        @if(category==2){<option value=2>Dokumentai</option>}
+                                        @if(category==3){<option value=3>Asmenybės</option>}
+                                        @if(category==4){<option value=4>Remėjai</option>}
+                                        @if(category==5){<option value=5>Istorija</option>}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="usr">Tipas:</label>
+                                    <select name="postType" class="form-control" id="postType" value="@form("postType").value">
+                                        @if(typ==0){<option value=0 @if(typ==0){selected}>Abu</option>}
+                                        @if(typ==0 || typ==1){<option value=1 @if(typ==1){selected}>Bekelės lenktynės</option>}
+                                        @if(typ==0 || typ==2){<option value=2 @if(typ==2){selected}>Pravažumo sportas</option>}
+                                    </select>
+                                </div>
+                                <button type="submit" id="loginbutton" class="btn btn-primary btn-login">Pateikti</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="content" class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @if(typ == 0){
+                                @for(post <- Post.findNews(page, postsPerPage)){
+                                    <div class="post-block" postid="@post.id">
+                                        <div class="post-header">
+                                            <h2 class="post-title">@post.title</h2>
+                                            <br>
+                                            @DateTimeFormat.forPattern("yyyy-MM-dd").print(post.created)
+                                        </div>
+                                        <div class="post-body">
+                                        @Html(post.body)
+                                        </div>
+                                        <div class="post-footer">
+                                            <div class="created">Created @DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").print(post.created) by @Account.findById(post.author_id).get.name</div>
+                                            <div class="modified">Modified @DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").print(post.modified) by @Account.findById(post.editor_id).get.name</div>
+                                            <button class="btn btn-danger" data-href="@controllers.master.routes.Mastercms.deletePost("", categoryString(category), page, post.id)" data-toggle="modal" data-target="#confirm-delete">Ištrinti</button>
+                                            <button class="btn btn-primary update_post" data-href="#" data-toggle="modal" data-target="#update-content">Atnaujinti</button>
+                                            <hr/>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @if(typ != 0) {
+                                @for(post <- Post.findPosts(typ, category, page, postsPerPage)){
+                                    <div class="post-block" postid="@post.id">
+                                        <div class="post-header">
+                                            <h2 class="post-title">@post.title</h2>
+                                            <br>
+                                            @DateTimeFormat.forPattern("yyyy-MM-dd").print(post.created)
+                                        </div>
+                                        <div class="post-body">
+                                        @Html(post.body)
+                                        </div>
+                                        <div class="post-footer">
+                                            <div class="created">Created @DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").print(post.created) by @Account.findById(post.author_id).get.name</div>
+                                            <div class="modified">Modified @DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").print(post.modified) by @Account.findById(post.editor_id).get.name</div>
+                                            <button class="btn btn-danger" data-href="@controllers.master.routes.Mastercms.deletePost(typeString(typ), categoryString(category), page, post.id)" data-toggle="modal" data-target="#confirm-delete">Ištrinti</button>
+                                            <button class="btn btn-primary update_post" data-href="#" data-toggle="modal" data-target="#update-content">Atnaujinti</button>
+                                            <hr/>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @if(pagesCount > 0) {
+                                <div class="text-center">
+                                    <ul class="pagination pagination-centered">
+                                    @for(i <- 1 to Post.pagesCount(typ, category, postsPerPage)) {
+                                        @if(i == page) {
+                                            <li class="active"><a href="@controllers.master.routes.Mastercms.main(typeString(typ), categoryString(category), i)">@i</a></li>
+                                        } else {
+                                            <li><a href="@controllers.master.routes.Mastercms.main(typeString(typ), categoryString(category), i)">@i</a></li>
+                                        }
+                                    }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Patvirtinti ištrynimą</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Įrašas bus ištrintas</p>
+                                <p>Ar tikrai norite tęsti?</p>
+                                <p class="debug-url"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Atšaukti</button>
+                                <a class="btn btn-danger btn-ok">Ištrinti</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="update-content" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Atnaujinti turinį</h4>
+                            </div>
+                            <form id="update-post-form" action="" method="POST" accept-charset="UTF-8">
+                                <div class="modal-body">
+                                    @if(form.hasErrors) {
+                                        @form.errors.map { error =>
+                                            <p class="text-danger">@error.message</p>
+                                        }
+                                    }
+                                    <div class="form-group">
+                                        <label for="title">Antraštė:</label>
+                                        <input id="update-title" type="text" name="title" class="form-control" placeholder="Enter title" value="@form("title").value">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="body">Turinys:</label>
+                                        <textarea id="update-textarea" class="form-control" rows="10" name="body" placeholder="Enter body text">@form("body").value</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usr">Kategorija</label>
+                                        <select name="postCategory" class="form-control" id="update-post-category" value="@form("postCategory").value">
+                                            <option value=1>Naujienos</option>
+                                            <option value=2>Dokumentai</option>
+                                            <option value=3>Asmenybės</option>
+                                            <option value=4>Remėjai</option>
+                                            <option value=5>Istorija</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usr">Tipas</label>
+                                        <select name="postType" class="form-control" id="update-post-type" value="@form("postType").value">
+                                            <option value="0">Abu</option>
+                                            <option value="1">Bekelės lenktynės</option>
+                                            <option value="2">Pravažumo sportas</option>
+                                        </select>
+                                    </div>
+                                    <p class="debug-url"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Atšaukti</button>
+                                    <button type="submit" id="updatebutton" class="btn btn-success btn-ok">Atnaujinti</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="@routes.Assets.at("ckeditor/ckeditor.js")"></script>
+    <script src="@routes.Assets.at("dropzone-master/dist/dropzone.js")"></script>
+    <script>
+            $(document).ready(function(){
+                $('#confirm-delete').on('show.bs.modal', function(e) {
+                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                });
+                $('#update-content').on('show.bs.modal', function(e) {
+                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                });
+
+                CKEDITOR.replace( 'body-textarea', {
+                    filebrowserBrowseUrl : '/master/fileBrowser'
+                });
+                CKEDITOR.replace( 'update-textarea' , {
+                    filebrowserBrowseUrl : '/master/fileBrowser'
+                });
+
+                $(".update_post").on("click", function(e){
+                    var body = $(this).closest("div").siblings(".post-body").html();
+                    var title = $(this).closest("div").siblings(".post-header").children(".post-title").html();
+
+                    var id = $(this).closest("div").closest(".post-block").attr("postid");
+                    var updateUrl = "/master/updatePost/@if(typ!=0){@typeString(typ)/}@categoryString(category)/@page/";
+                    $("#update-post-form").attr("action", updateUrl+id)
+                    $("#update-title").val(title);
+                    $("#update-post-type").val(@typ);
+                    $("#update-post-category").val(@category);
+                    CKEDITOR.instances["update-textarea"].setData(body);
+
+                });
+
+                $("#toggle-form").click(function(){
+                    $("#create-post-row").toggle(500);
+                });
+
+            });
+    </script>
+}

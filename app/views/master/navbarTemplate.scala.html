@@ -1,0 +1,44 @@
+@(account: models.Account)(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>!window.jQuery && document.write('<script src=@routes.Assets.at("javascripts/jquery-1.12.4.min.js")><\/script>')</script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="@routes.Assets.at("javascripts/jquery.pjax.js")" type="text/javascript"></script>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/master_main.css")">
+    </head>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="@controllers.master.routes.Mastercms.main("", "naujienos", 1)">
+                    <i class="fa fa-home"></i>  <span class="light">4x4sportCMS</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="@controllers.master.routes.Mastercms.main("", "naujienos", 1)">Redaguoti turinį</a></li>
+                    <li><a href="@controllers.master.routes.Mastercms.applications">Paraiškos</a></li>
+                    @if(account.role == Role.Master){<li><a href="@controllers.master.routes.Mastercms.admins">Administratoriai</a></li>}
+                    <li><a href="@controllers.main.routes.Application.index("", "naujienos", 1)">Eiti į 4x4sport</a></li>
+                    <li><a href="@controllers.master.routes.Sessions.logout">Atsijungti</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <body>
+
+        @content
+
+    </body>
+</html>

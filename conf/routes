@@ -1,0 +1,43 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                     controllers.main.Application.index(t: String="", cat: String="naujienos", page: Int = 1)
+GET     /naujienos                            controllers.main.Application.index(t: String="", cat: String="naujienos", page: Int = 1)
+GET     /naujienos/:page                      controllers.main.Application.index(t: String="", cat: String="naujienos", page: Int)
+GET     /posts/:id                            controllers.main.Application.showPost(id: Int)
+POST    /applyToCompetition                   controllers.main.Application.applyToCompetition
+
+GET     /master                               controllers.master.Sessions.login
+POST    /master/login                         controllers.master.Sessions.authenticate
+GET     /master/mastercms                     controllers.master.Mastercms.main(t: String="", cat: String="naujienos", page: Int = 1)
+GET     /master/mastercms/admins              controllers.master.Mastercms.admins
+GET     /master/mastercms/applications        controllers.master.Mastercms.applications
+GET     /master/mastercms/:page               controllers.master.Mastercms.main(t: String="", cat: String="naujienos", page: Int)
+GET     /master/logout                        controllers.master.Sessions.logout
+
+POST    /master/createPost/:cat/:page         controllers.master.Mastercms.createPost(t: String="", cat: String, page: Int)
+POST    /master/createPost/:t/:cat/:page      controllers.master.Mastercms.createPost(t: String, cat: String, page: Int)
+POST    /master/updatePost/:cat/:page/:id     controllers.master.Mastercms.updatePost(t: String="", cat: String, page: Int, id: Int)
+POST    /master/updatePost/:t/:cat/:page/:id  controllers.master.Mastercms.updatePost(t: String, cat: String, page: Int, id: Int)
+POST    /master/addUser                       controllers.master.Mastercms.addUser
+GET     /master/deleteUser/:id                controllers.master.Mastercms.deleteUser(id: Int)
+GET     /master/deletePost/:cat/:page/:id     controllers.master.Mastercms.deletePost(t: String="", cat: String, page: Int, id: Int)
+GET     /master/deletePost/:t/:cat/:page/:id  controllers.master.Mastercms.deletePost(t: String, cat: String, page: Int, id: Int)
+GET     /master/deleteApplication/:id         controllers.master.Mastercms.deleteApplication(id: Int)
+
+GET     /master/fileBrowser                   controllers.master.Mastercms.fileBrowser
+
+POST    /master/uploadFile                    controllers.master.Mastercms.uploadFile
+POST    /master/deleteFile                    controllers.master.Mastercms.deleteFile
+GET     /master/getFiles                      controllers.master.Mastercms.getFiles
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                         controllers.Assets.at(path="/public", file)
+
+# Map resources from externale folder /srv/sport4x4/uploads/
+GET     /uploads/:years/:month/:day/:name      controllers.assets.AssetsExternal.at(path="/srv/sport4x4/uploads", years: Int, month: Int, day: Int, name: String)
+
+GET     /:t/:cat/:page                        controllers.main.Application.index(t: String, cat: String, page: Int)
+GET     /master/mastercms/:t/:cat/:page       controllers.master.Mastercms.main(t: String, cat: String, page: Int)

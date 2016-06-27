@@ -1,0 +1,100 @@
+@(account: models.Account, form: Form[Option[models.Account]])(implicit template: String => Html => Html)
+
+@navbarTemplate(account)("Admins") {
+    <div id="admins-container" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-sm-offset-1">
+
+                <h2>Pridėti administratorių</h2>
+
+                @helper.form(controllers.master.routes.Mastercms.addUser) {
+
+                    @if(form.hasErrors) {
+                        @form.errors.map { error =>
+                            <p class="text-danger">@error.message</p>
+                        }
+                    }
+
+                    <div class="form-group">
+                        <label for="email">El. paštas:</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="El. paštas" value="@form("email").value">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Slaptažodis:</label>
+                        <input type="password" class="form-control" name="password.main" id="password" placeholder="Slaptažodis">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Pakartokite slaptažodį:</label>
+                        <input type="password" class="form-control" name="password.confirm" id="rpassword" placeholder="Slaptažodis">
+                    </div>
+                    <div class="form-group">
+                        <label for="usr">Vardas Pavardė:</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Vardenis Pavardenis" value="@form("name").value">
+                    </div>
+                    <div class="form-group">
+                        <label for="usr">Administratoriaus tipas:</label>
+                        <select name="role" class="form-control" id="role" value="@form("role").value">
+                            <option value=Administrator>Paprastas administratorius</option>
+                            <option value=Master>Super administratorius</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="addUserButton" class="btn btn-primary btn-login">Pridėti administratorių</button>
+                }
+            </div>
+            <div class="col-sm-6 col-sm-offset-1">
+
+                <h2>Dabartiniai administratoriai</h2>
+
+                <table class="table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th>El. paštas</th>
+                            <th>Vardas</th>
+                            <th>Tipas</th>
+                            <th>Pašalinti administratorių</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(i <- Account.findAll()){
+                        <tr>
+                            <td>@i.email</td>
+                            <td>@i.name</td>
+                            <td>@i.role</td>
+                            @if(account.email != i.email) {
+                                <td>
+                                    <button class="btn btn-danger" data-href="@controllers.master.routes.Mastercms.deleteUser(i.id)" data-toggle="modal" data-target="#confirm-delete" admin-name="@i.name">Pašalinti</button>
+                                </td>
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Patvirtinimas</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Jūs pašalinsite administratorių <span id="admin-name" style="font-weight: bold;"></span></p>
+                    <p>Ar tikrai norite tęsti?</p>
+                    <p class="debug-url"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Atšaukti</button>
+                    <a class="btn btn-danger btn-ok">Pašalinti</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+            $('#confirm-delete').on('show.bs.modal', function(e) {
+                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                $('#admin-name').html($(e.relatedTarget).attr('admin-name'));
+            });
+    </script>
+}

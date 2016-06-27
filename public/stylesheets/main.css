@@ -1,0 +1,286 @@
+body {
+    background: url('/assets/images/background_main.png') no-repeat bottom center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+img {
+    width: 100%;
+}
+
+#left-flag, #right-flag {
+    display: none;
+}
+
+#content {
+    background-color: #eeeeee;
+    min-height: 90vh;
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.post-block {
+    padding-bottom: 20px;
+}
+
+.post-body {
+    padding-bottom: 10px;
+    word-wrap: break-word;
+}
+
+#picture-main {
+    width: 100%;
+}
+
+#picture-container {
+    position: relative;
+    float: none;
+    display: table-cell;
+    vertical-align: bottom;
+}
+
+#picture-fb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 20%;
+    width: auto;
+}
+
+.pagination>li>a {
+    border: 1px solid #73010B;
+    color: #000;
+}
+.pagination>li.active>a {
+    background: #93010B;
+    color: #fff;
+}
+
+.pagination>li.active>a:hover {
+    background: #73010B;
+}
+
+.pagination>li>a:hover {
+    border: 1px solid #73010B;
+    color: #93010B;
+}
+
+#toggle-application {
+    margin-bottom: 20px;
+}
+
+.nav-custom{
+    background: #93010B;
+}
+
+#navbar-main > li > a {
+    color: #B2B3B3;
+}
+
+#navbar-main > li > ul > li > a {
+    color: #B2B3B3;
+}
+
+#navbar-main > li > a  {
+    height: 27px;
+    padding: 0;
+    padding-top: 3px;
+    margin-bottom: 0;
+}
+
+iframe {
+    max-width: 100%;
+}
+
+#navbar-main > .active {
+    background-color: #73010B;
+}
+
+.dropdown-menu {
+    background-color: #93010B;
+    min-width: 100%;
+}
+
+ul#navbar-main li.dropdown:active > ul.dropdown-menu {
+    margin-top: 0px;
+    display: block;
+}
+
+.post-title {
+    color: #93010B;
+    display: inline-block;
+}
+
+
+.post-header > a:link {
+    color: #93010B
+}
+
+/* visited link */
+.post-header > a:visited {
+    color: #93010B
+}
+
+/* mouse over link */
+.post-header > a:hover {
+    color: #73010B;
+    text-decoration: none;
+}
+
+/* selected link */
+.post-header > a:active {
+    color: #73010B;
+    text-decoration: none;
+}
+
+.post-header {
+    padding-bottom: 20px;
+}
+
+#sponsors-container {
+    position:fixed;
+    left:0px;
+    bottom:0px;
+    width: 100%;
+}
+
+#sponsors {
+    background-color: transparent;
+    height: 70px;
+}
+
+/* Container DIV - automatically generated */
+.simply-scroll-container {
+    position: relative;
+}
+
+/* Clip DIV - automatically generated */
+.simply-scroll-clip {
+    position: relative;
+    overflow: hidden;
+}
+
+/* UL/OL/DIV - the element that simplyScroll is inited on
+Class name automatically added to element */
+.simply-scroll-list {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.simply-scroll-list li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.simply-scroll-list li img {
+    border: none;
+    display: block;
+}
+
+/* Custom class modifications - adds to / overrides above
+
+.simply-scroll is default base class */
+
+/* Container DIV */
+.simply-scroll {
+    width: 100%;
+    height: auto;
+}
+
+/* Clip DIV */
+.simply-scroll .simply-scroll-clip {
+    width: 100%;
+    height: auto;
+}
+
+/* Explicitly set height/width of each list item */
+.simply-scroll .simply-scroll-list li {
+    float: left; /* Horizontal scroll only */
+    width: 107px;
+    height: auto;
+    vertical-align: middle;
+}
+
+.img-sponsors {
+    width: 107px;
+    height: auto;
+}
+
+.row {
+    position: relative;
+}
+
+@media (min-width: 768px){
+    #header {
+        display: table;
+    }
+
+    #right-flag {
+        float: none;
+        display: table-cell;
+        vertical-align: bottom;
+        padding-left: 0;
+        bottom: -6px;
+    }
+
+    #left-flag {
+        float: none;
+        display: table-cell;
+        vertical-align: bottom;
+        padding-right: 0;
+        bottom: -6px;
+    }
+
+    .picture-flag {
+        max-height: 15vh;
+        width: auto;
+        padding-top: 10px;
+    }
+
+    #picture-fb {
+        padding: 10px;
+        max-height: 25%;
+    }
+
+    .nopadding {
+        padding: 0;
+    }
+
+    #navbar-main > li > a {
+        font-size: large;
+        height: 40px;
+        padding: 7px;
+    }
+
+    ul#navbar-main li.dropdown:hover > ul.dropdown-menu {
+        margin-top: 0px;
+        display: block;
+    }
+
+    #sponsors {
+        height: 93px;
+    }
+
+    #content {
+        padding-bottom: 150px;
+    }
+
+    .simply-scroll .simply-scroll-list li {
+        width: 143px;
+        height: auto;
+    }
+
+    .img-sponsors {
+        width: 143px;
+        height: auto;
+    }
+}

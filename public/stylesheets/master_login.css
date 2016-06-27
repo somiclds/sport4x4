@@ -1,0 +1,18 @@
+#greeting {
+    padding-bottom: 20px;
+}
+
+#please-login {
+    padding-bottom: 10px;
+}
+
+@media(min-width:992px) {
+    #greeting {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    #please-login {
+        padding-bottom: 20px;
+    }
+}

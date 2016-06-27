@@ -1,0 +1,79 @@
+@(account: models.Account)
+
+@import org.joda.time.format.DateTimeFormat
+
+@navbarTemplate(account)("Applications") {
+    <div id="applications-container" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <h2>Paraiškos</h2>
+                <table class="table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Markė</th>
+                            <th>Valst. nr.</th>
+                            <th>Vairuotojas</th>
+                            <th>El. paštas</th>
+                            <th>Tel. nr.</th>
+                            <th>Adresas</th>
+                            <th>Ekipažo narys 1</th>
+                            <th>Ekipažo narys 2</th>
+                            <th>Ekipažo narys 3</th>
+                            <th>Ekipažo narys 4</th>
+                            <th>Atsiųsta</th>
+                            @if(account.role == Role.Master){<th>Ištrinti paraišką</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(i <- App.findAllApplications()){
+                        <tr>
+                            <td>@i.auto_make</td>
+                            <td>@i.license_plate</td>
+                            <td>@i.driver</td>
+                            <td>@i.email</td>
+                            <td>@i.phone_numb</td>
+                            <td>@i.address</td>
+                            <td>@i.member_1</td>
+                            <td>@i.member_2</td>
+                            <td>@i.member_3</td>
+                            <td>@i.member_4</td>
+                            <td>@DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").print(i.sent)</td>
+                            @if(account.role == Role.Master) {
+                                <td>
+                                    <button class="btn btn-danger" data-href="@controllers.master.routes.Mastercms.deleteApplication(i.id)" driver-name="@i.driver" data-toggle="modal" data-target="#confirm-delete">
+                                        Ištrinti</button>
+                                </td>
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Patvirtinimas</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Patvirtinę, jūs ištrinsite vairuotojo <span id="driver-name" style="font-weight: bold;"></span> paraišką</p>
+                    <p>Ar norite tęsti?</p>
+                    <p class="debug-url"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Atšaukti</button>
+                    <a class="btn btn-danger btn-ok">Ištrinti</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+            $('#confirm-delete').on('show.bs.modal', function(e) {
+                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                $('#driver-name').html($(e.relatedTarget).attr('driver-name'));
+            });
+    </script>
+}

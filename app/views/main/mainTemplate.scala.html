@@ -1,0 +1,118 @@
+@(title: String, typ: Int)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>!window.jQuery && document.write('<script src=@routes.Assets.at("javascripts/jquery-1.12.4.min.js")><\/script>')</script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lightbox/css/lightbox.css")">
+    </head>
+    <body>
+        <div id="fb-root"></div>
+        <script>
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/lt_LT/sdk.js#xfbml=1&version=v2.6&appId=589852934512420";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+
+        <div class="container-fluid">
+            <div id="header" class="row">
+                <div id="left-flag" class="col-sm-2 col-sm-offset-1 text-right">
+                    <a href="https://www.lesta.lt/" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/lesta_flag.png")"></a><br>
+                    <a href="http://www.autopaslauga.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/autopaslauga_flag.png")"></a>
+                </div>
+                <div id="picture-container" class="col-sm-6 nopadding">
+                    <a href="http://www.facebook.com/4x4propaganda" target="_blank"><img id="picture-fb" src="@routes.Assets.at("images/fb_logo.png")"></a>
+                    <img id="picture-main"
+                        @if(typ==0){src="@routes.Assets.at("images/picture_main.png")"}
+                        @if(typ==1){src="@routes.Assets.at("images/picture_main_rallyraid.png")"}
+                        @if(typ==2){src="@routes.Assets.at("images/picture_main_trophyraid.png")"}
+                    >
+                </div>
+                <div id="right-flag" class="col-sm-2">
+                    <a href="http://www.certex.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/certex_flag.png")"><br></a>
+                    <a href="http://www.kervi.lt" target="_blank"><img class="picture-flag" src="@routes.Assets.at("images/kervi_flag.png")"></a>
+                </div>
+            </div>
+        </div>
+        <div id="nav-container" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 nopadding">
+                    <ul id="navbar-main" class="nav nav-justified nav-custom">
+                        <li role="presentation" class="dropdown @if(typ==2){ active }">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Pravažumo sportas <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href='@controllers.main.routes.Application.index("trophyraid", "dokumentai", 1)'>Dokumentai</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("trophyraid", "asmenybes", 1)">Asmenybės</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("trophyraid", "remejai", 1)">Remėjai</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("trophyraid", "istorija", 1)">Istorija</a></li>
+                            </ul>
+                        </li>
+                        <li class="@if(typ==0){ active }"><a href="@controllers.main.routes.Application.index("", "naujienos", 1)">Naujienos</a></li>
+                        <li role="presentation" class="dropdown @if(typ==1){ active }">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Bekelės lenktynės <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@controllers.main.routes.Application.index("rallyraid", "dokumentai", 1)">Dokumentai</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("rallyraid", "asmenybes", 1)">Asmenybės</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("rallyraid", "remejai", 1)">Remėjai</a></li>
+                                <li><a href="@controllers.main.routes.Application.index("rallyraid", "istorija", 1)">Istorija</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content-container" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 nopadding">
+                    @content
+                </div>
+            </div>
+        </div>
+        <div id="sponsors-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3 nopadding">
+                        <div id="sponsors">
+                            <ul id="scroller">
+                                <li><a href="http://www.ginalas.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_stihl.png")" alt="Stihl" /></a></li>
+                                <li><a href="http://www.lasf.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_lasf.png")" alt="LASF" /></a></li>
+                                <li><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_4x4sport.png")" alt="4x4sport" /></li>
+                                <li><a href="http://www.motoshop.lt/" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_motoshop.png")" alt="motoshop" /></a></li>
+                                <li><a href="http://www.pasienis.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_vsat.png")" alt="Pasienis" /></a></li>
+                                <li><a href="http://www.bekelesfiesta.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_bf.png")" alt="bekeles-fiesta" /></a></li>
+                                <li><a href="http://www.druskininkai.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_druskininkai.png")" alt="Druskininkai" border="0" /></a></li>
+                                <li><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_rkgildija.png")" alt="rkgildija" border="0" /></li>
+                                <li><a href="http://www.kervi.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_kervi.png")" alt="Kervi" /></a></li>
+                                <li><a href="http://www.loctracker.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_lock.png")" alt="Loctracker" /></a></li>
+                                <li><a href="http://www.kalcitas.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_kalcitas.png")" alt="Kalcitas" /></a></li>
+                                <li><a href="http://www.autoplius.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_autoplius.png")" alt="Autoplius" /></a></li>
+                                <li><a href="http://www.15min.lt" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_15min.png")" alt="15min.lt" /></a></li>
+                                <li><a href="http://www.15min.lt/gazas" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_gazas.png")" alt="gazas.lt" /></a></li>
+                                <li><a href="https://www.lesta.lt/" target="_blank"><img class="img-sponsors" src="@routes.Assets.at("images/sponsors/r_lesta.png")" alt="Lesta" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.simplyscroll.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("lightbox/js/lightbox.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/main/main.js")"></script>
+    </body>
+</html>

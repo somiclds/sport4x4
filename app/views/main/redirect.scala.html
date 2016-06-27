@@ -1,0 +1,53 @@
+@(message: String)
+
+<html>
+    <head>
+        <title>Redirecting</title>
+        <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        #container {
+            width: 100%;
+            max-width: 600px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 40%;
+        }
+
+        #timeLeft {
+            color: green;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <img src="@routes.Assets.at("images/ok.png")" alt="ok" height="200" width="200">
+            <h1>Paraiška sėkmingai išsiųsta!</h1><br>
+            <h2>Jūs būsite nukreiptas į pradinį puslapį po <span id="timeLeft">5</span> sekundžių</h2>
+        </div>
+    </body>
+    <script>
+            $(document).ready(function() {
+                window.setInterval(function() {
+                    var timeLeft    = $("#timeLeft").html();
+                    if(eval(timeLeft) == 0){
+                        window.location= ("@controllers.main.routes.Application.index("", "naujienos", 1)");
+                    }else{
+                        $("#timeLeft").html(eval(timeLeft)- eval(1));
+                    }
+                }, 1000);
+            });
+    </script>
+</html>

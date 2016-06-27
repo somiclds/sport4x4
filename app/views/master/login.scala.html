@@ -1,0 +1,52 @@
+@(form: Form[Option[models.Account]])(implicit flash: Flash)
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>4x4SportCMS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/master_login.css")">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <h1 id="greeting">4x4Sport turinio valdymo sistema</h1>
+          <h3 id="please-login">Prašome prisijungti</h3>
+
+          @helper.form(controllers.master.routes.Sessions.authenticate) {
+
+            @form.globalError.map { error =>
+              <p class="text-danger">
+                @error.message
+              <p class="text-danger">
+            }
+
+            @flash.get("success").map { message =>
+              <p class="text-success">
+                @message
+              </p>
+            }
+
+            <div class="form-group">
+              <label for="email">El. paštas:</label>
+              <input type="email" name="email" class="form-control" id="email" placeholder="El. paštas" value="@form("email").value">
+            </div>
+            <div class="form-group">
+              <label for="pwd">Slaptažodis:</label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Slaptažodis">
+            </div>
+            <button type="submit" id="loginbutton" class="btn btn-primary btn-login">Prisijungti</button>
+
+          }
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
