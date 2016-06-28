@@ -15,7 +15,7 @@ object Sessions extends Controller with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(Account.authenticate)(_.map(u => (u.email, "")))
-      .verifying("Invalid email or password", result => result.isDefined)
+      .verifying("Blogas el. paštas arba slaptažodis", result => result.isDefined)
   }
 
   /**
@@ -27,7 +27,7 @@ object Sessions extends Controller with LoginLogout with AuthConfigImpl {
 
   def logout = Action.async { implicit request =>
     gotoLogoutSucceeded.map(_.flashing(
-      "success" -> "You've been logged out"
+      "success" -> "Jūs atsijungėte iš sistemos"
     ).removingFromSession("rememberme"))
   }
 

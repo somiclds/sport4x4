@@ -26,65 +26,6 @@
 
 @mainTemplate(title, typ) {
     <div id="content" class="container-fluid">
-        <button id="toggle-application" class="btn btn-default">Pildyti paraišką į varžybas</button>
-        <div id="application-row" class="row" @if(!form.hasErrors){style="display: none"}>
-            @if(form.hasErrors) {
-                <div class="row">
-                    <div class="col-sm-5 col-sm-offset-1">
-                    @form.errors.map { error =>
-                        <p class="text-danger">@error.message</p>
-                    }
-                    </div>
-                </div>
-            }
-            <form id="applyForm" action="@controllers.main.routes.Application.applyToCompetition" method="POST" accept-charset="UTF-8">
-                <div class="col-sm-5 col-sm-offset-1">
-                    <div class="form-group">
-                        <label for="auto_make">Automobilio markė</label>
-                        <input type="text" name="auto_make" class="form-control" id="auto_make" maxlength="50" placeholder="Įveskite markę" value="@form("auto_make").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="license_plate">Valstybinis nr.</label>
-                        <input type="text" name="license_plate" class="form-control" id="license_plate" maxlength="12" placeholder="Valstybinis nr." value="@form("license_plate").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="driver">Vairuotojas</label>
-                        <input type="text" name="driver" class="form-control" id="driver" maxlength="40" placeholder="Vardenis Pavardenis" value="@form("driver").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">El. paštas</label>
-                        <input type="email" name="email" class="form-control" id="email" maxlength="50" placeholder="El. paštas" value="@form("email").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone_numb">Telefono nr.</label>
-                        <input type="text" name="phone_numb" class="form-control" id="phone_numb" maxlength="22" placeholder="+37066666666" value="@form("phone_numb").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Adresas</label>
-                        <input type="text" name="address" class="form-control" id="address" maxlength="50" placeholder="Miestas, gatvė" value="@form("address").value">
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="form-group">
-                        <label for="member_1">Ekipažo narys 1</label>
-                        <input type="text" name="member_1" class="form-control" id="member_1" maxlength="40" placeholder="Vardenis Pavardenis" value="@form("member_1").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="member_2">Ekipažo narys 2</label>
-                        <input type="text" name="member_2" class="form-control" id="member_2" maxlength="40" placeholder="Vardenis Pavardenis" value="@form("member_2").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="member_3">Ekipažo narys 3</label>
-                        <input type="text" name="member_3" class="form-control" id="member_3" maxlength="40" placeholder="Vardenis Pavardenis" value="@form("member_3").value">
-                    </div>
-                    <div class="form-group">
-                        <label for="member_4">Ekipažo narys 1</label>
-                        <input type="text" name="member_4" class="form-control" id="member_4" maxlength="40" placeholder="Vardenis Pavardenis" value="@form("member_4").value">
-                    </div>
-                    <button type="submit" id="submitButton" class="btn btn-primary btn-login">Siųsti paraišką</button>
-                </div>
-            </form>
-        </div>
         <div class="row">
             <div class="col-sm-12">
             @for(post <- Post.findPosts(typ, 2, page, postsPerPage)){
@@ -116,15 +57,12 @@
                     }
                     </ul>
                 </div>
+            } else {
+                @if(pagesCount == 0) {
+                    <h3 class="text-center">Informacija ruošiama</h3>
+                }
             }
             </div>
         </div>
     </div>
-    <script>
-            $(document).ready(function(){
-                $("#toggle-application").click(function(){
-                    $("#application-row").toggle(500);
-                });
-            });
-    </script>
 }

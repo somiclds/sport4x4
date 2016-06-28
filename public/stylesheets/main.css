@@ -58,11 +58,13 @@ img {
     color: #000;
 }
 .pagination>li.active>a {
+    border: 1px solid #73010B;
     background: #93010B;
     color: #fff;
 }
 
 .pagination>li.active>a:hover {
+    border: 1px solid #73010B;
     background: #73010B;
 }
 

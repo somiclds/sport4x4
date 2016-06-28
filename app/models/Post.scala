@@ -22,6 +22,7 @@ object Post extends SQLSyntaxSupport[Post] {
   }.map(Post(a)).single().apply().get
 
   def postCount(post_type: Int, post_category: Int)(implicit s: DBSession = auto): Int = {
+    // post_type 0 means that type does not matter
     if (post_type != 0) {
       withSQL {
         select(count).from(Post as a).where.eq(a.post_category, post_category).and.eq(a.post_type, post_type)

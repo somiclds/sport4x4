@@ -16,7 +16,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-          <h1 id="greeting">4x4Sport turinio valdymo sistema</h1>
+          <h1 id="greeting"><span id="sport4x4">4x4sport</span> turinio valdymo sistema</h1>
           <h3 id="please-login">Prašome prisijungti</h3>
 
           @helper.form(controllers.master.routes.Sessions.authenticate) {
@@ -47,6 +47,6 @@
         </div>
       </div>
     </div>
-
+    <script src="@routes.Assets.at("javascripts/master/master_login.js")"></script>
   </body>
 </html>
